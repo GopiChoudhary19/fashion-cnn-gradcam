@@ -1,0 +1,57 @@
+{
+  "params": 392242,
+  "epochs": 7,
+  "best_val_acc": 0.936,
+  "test_acc": 0.9282,
+  "test_macro_f1": 0.9279,
+  "per_class_f1": {
+    "T-shirt/top": 0.8839,
+    "Trouser": 0.9895,
+    "Pullover": 0.9079,
+    "Dress": 0.9289,
+    "Coat": 0.8861,
+    "Sandal": 0.982,
+    "Shirt": 0.7803,
+    "Sneaker": 0.9643,
+    "Bag": 0.989,
+    "Ankle boot": 0.9673
+  },
+  "most_confused_pair": "Shirt -> T-shirt/top (102 images)",
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.1247052903608843,
+      "val_acc": 0.7146
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.8590806739373641,
+      "val_acc": 0.824
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.7884820559588346,
+      "val_acc": 0.8778
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.7454124528191306,
+      "val_acc": 0.9106
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.7100340755982832,
+      "val_acc": 0.917
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.6860855653936213,
+      "val_acc": 0.9312
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.6674938679608432,
+      "val_acc": 0.936
+    }
+  ]
+}
