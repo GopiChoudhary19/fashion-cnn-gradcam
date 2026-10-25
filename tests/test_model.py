@@ -28,3 +28,12 @@ def test_overfits_tiny_batch():
         loss.backward()
         opt.step()
     assert loss.item() < 0.1
+
+
+def test_gradcam_leaves_model_state_untouched():
+    torch.manual_seed(0)
+    m = SmallResNet(width=8)
+    m.train()
+    grad_cam(m, torch.randn(2, 1, 28, 28))
+    assert m.training, "grad_cam must restore training mode"
+    assert all(p.grad is None for p in m.parameters()), "grad_cam must not accumulate parameter gradients"
