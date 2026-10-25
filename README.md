@@ -31,13 +31,35 @@ below show the model often does not look at.
 
 ![grad-cam](reports/gradcam.png)
 
+## Try it on an image
+
+Download the trained weights (1.6 MB) from the [v1.1 release](https://github.com/GopiChoudhary19/fashion-cnn-gradcam/releases/tag/v1.1)
+into `reports/`, or produce them by training, then:
+
+```bash
+PYTHONPATH=src python -m fashion_cnn.predict examples/shirt.png --out shirt_gradcam.png
+```
+
+```text
+Shirt        0.653
+T-shirt/top  0.170
+Coat         0.096
+Grad-CAM overlay written to shirt_gradcam.png
+```
+
+![prediction with Grad-CAM](examples/shirt_gradcam.png)
+
+The images in `examples/` are from the Fashion-MNIST test set. Any other image is converted to the training
+format: grayscale, inverted if it is dark-on-light like a product photo, padded to a square and resized to 28x28.
+
 ## What is inside
 
 - **Model** (`model.py`) - 3-stage residual network (BatchNorm, skip connections, global average pooling, dropout).
 - **Training** (`train.py`) - AdamW, One-Cycle learning-rate schedule, label smoothing 0.1, checkpoint selection on a held-out 5k validation split (the test set is only used once, at the end).
 - **Augmentation** - random shifts, horizontal flips and random erasing, implemented as batched tensor ops on the whole training tensor instead of per-image PIL transforms.
-- **Explainability** (`gradcam.py`) - Grad-CAM on the last convolutional stage, vectorised over a batch.
-- **Tests** - shape checks, Grad-CAM range, and an "overfit one batch" sanity test.
+- **Explainability** (`gradcam.py`) - Grad-CAM on the last convolutional stage, vectorised over a batch; it leaves the model's mode and gradients untouched.
+- **Inference** (`predict.py`) - classify any image file and save its Grad-CAM overlay.
+- **Tests** - shape checks, Grad-CAM range and side effects, image preprocessing, checkpoint loading, and an "overfit one batch" sanity test.
 
 ## Run it
 
