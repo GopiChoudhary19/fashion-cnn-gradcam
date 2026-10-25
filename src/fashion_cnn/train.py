@@ -15,14 +15,10 @@ from torch.utils.data import DataLoader, TensorDataset
 from torchvision import datasets
 
 from .gradcam import grad_cam
-from .model import SmallResNet, count_params
+from .model import CLASSES, MEAN, STD, SmallResNet, count_params
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
-
-CLASSES = ["T-shirt/top", "Trouser", "Pullover", "Dress", "Coat",
-           "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"]
-MEAN, STD = 0.2860, 0.3530
 
 
 def seed_everything(seed: int):

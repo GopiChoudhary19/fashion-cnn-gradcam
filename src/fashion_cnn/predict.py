@@ -10,8 +10,7 @@ import torch
 from PIL import Image, ImageOps
 
 from .gradcam import grad_cam
-from .model import SmallResNet
-from .train import CLASSES, MEAN, STD
+from .model import CLASSES, MEAN, STD, SmallResNet
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402

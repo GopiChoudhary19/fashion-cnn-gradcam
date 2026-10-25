@@ -1,6 +1,10 @@
 import torch
 from torch import nn
 
+CLASSES = ["T-shirt/top", "Trouser", "Pullover", "Dress", "Coat",
+           "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"]
+MEAN, STD = 0.2860, 0.3530  # Fashion-MNIST training-set pixel statistics
+
 
 class ResBlock(nn.Module):
     def __init__(self, cin: int, cout: int, stride: int = 1):

@@ -4,7 +4,7 @@ from PIL import Image
 
 from fashion_cnn.model import SmallResNet
 from fashion_cnn.predict import classify, load_image, load_model
-from fashion_cnn.train import MEAN, STD
+from fashion_cnn.model import MEAN, STD
 
 
 def test_load_image_matches_training_format(tmp_path):
