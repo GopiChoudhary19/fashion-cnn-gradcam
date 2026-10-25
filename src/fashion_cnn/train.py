@@ -65,11 +65,16 @@ def loaders(root: str, batch: int, seed: int):
 
 
 @torch.no_grad()
-def predict(model, loader, device):
+def predict(model, loader, device, tta: bool = False):
+    """Class probabilities; with tta=True, averaged over the image and its mirror (training uses flips too)."""
     model.eval()
     ys, ps = [], []
     for x, y in loader:
-        ps.append(model(x.to(device)).softmax(1).cpu())
+        x = x.to(device)
+        p = model(x).softmax(1)
+        if tta:
+            p = (p + model(x.flip(-1)).softmax(1)) / 2
+        ps.append(p.cpu())
         ys.append(y)
     return torch.cat(ys).numpy(), torch.cat(ps).numpy()
 
@@ -107,7 +112,10 @@ def main(args):
             torch.save(model.state_dict(), out / "best.pt")
 
     model.load_state_dict(torch.load(out / "best.pt", map_location=device))
-    yt, pt = predict(model, te, device)
+    # whether flip-averaging helps is checked on the validation split, not the test set
+    yv, pv_tta = predict(model, va, device, tta=True)
+    yt, pt_plain = predict(model, te, device)
+    _, pt = predict(model, te, device, tta=True)
     pred = pt.argmax(1)
     rep = classification_report(yt, pred, target_names=CLASSES, output_dict=True, digits=4)
     cm = confusion_matrix(yt, pred)
@@ -118,6 +126,8 @@ def main(args):
         "params": count_params(model),
         "epochs": args.epochs,
         "best_val_acc": round(best_acc, 4),
+        "best_val_acc_tta": round(float((pv_tta.argmax(1) == yv).mean()), 4),
+        "test_acc_no_tta": round(float((pt_plain.argmax(1) == yt).mean()), 4),
         "test_acc": round(float((pred == yt).mean()), 4),
         "test_macro_f1": round(rep["macro avg"]["f1-score"], 4),
         "per_class_f1": {c: round(rep[c]["f1-score"], 4) for c in CLASSES},

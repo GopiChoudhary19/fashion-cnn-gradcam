@@ -11,15 +11,19 @@ model fails.
 
 | Metric | Value |
 |---|---|
-| Test accuracy | **92.82%** |
-| Test macro-F1 | **0.928** |
+| Test accuracy (with flip TTA) | **93.05%** |
+| Test accuracy (single pass) | 92.82% |
+| Test macro-F1 | **0.930** |
 | Parameters | 392K |
 | Training | 7 epochs on a laptop CPU (~15 min) |
 
-Per-class F1: Trouser 0.990, Bag 0.989, Sandal 0.982, Ankle boot 0.967, Sneaker 0.964, Dress 0.929,
-Pullover 0.908, Coat 0.886, T-shirt/top 0.884, **Shirt 0.780**.
+Test-time augmentation averages the prediction for an image and its mirror image. It was adopted because it
+helped on the validation split (93.60% -> 93.80%), before the test set was scored.
 
-The weakest class is *Shirt*; the most common mistake is **Shirt predicted as T-shirt/top (102 images)**.
+Per-class F1: Trouser 0.992, Bag 0.988, Sandal 0.983, Ankle boot 0.967, Sneaker 0.966, Dress 0.931,
+Pullover 0.907, Coat 0.896, T-shirt/top 0.888, **Shirt 0.785**.
+
+The weakest class is *Shirt*; the most common mistake is **Shirt predicted as T-shirt/top (100 images)**.
 These classes share silhouettes at 28x28 and differ mainly in collars and buttons, which the Grad-CAM maps
 below show the model often does not look at.
 
@@ -48,7 +52,7 @@ Outputs go to `reports/` (`metrics.json`, confusion matrix, Grad-CAM figure).
 ## Next steps
 
 - Wider network and longer schedule on a GPU (the run here was sized for a laptop CPU).
-- Test-time augmentation and a small ensemble.
+- A small ensemble of independently seeded models.
 - Higher-resolution inputs or attention on the collar region to separate Shirt from T-shirt.
 
 ## License
