@@ -18,7 +18,13 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 def load_image(path: str) -> torch.Tensor:
     """Any image -> 1x1x28x28 tensor in the training distribution (light garment on a dark background)."""
-    img = ImageOps.grayscale(Image.open(path))
+    img = Image.open(path)
+    if img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info):
+        # transparent pixels usually hide black RGB; flatten onto white like an ordinary product photo first,
+        # otherwise a dark garment on a transparent PNG stays dark-on-dark and is never inverted
+        rgba = img.convert("RGBA")
+        img = Image.alpha_composite(Image.new("RGBA", rgba.size, (255, 255, 255, 255)), rgba)
+    img = ImageOps.grayscale(img)
     arr = np.asarray(img, dtype=np.float32)
     if arr.mean() > 127:  # product photos are usually dark-on-light; Fashion-MNIST is light-on-dark
         img = ImageOps.invert(img)
